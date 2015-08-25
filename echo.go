@@ -1,3 +1,43 @@
+/*
+ * Copyright 2015, Rowe Technology Inc.
+ * All rights reserved.
+ * http://www.rowetechinc.com
+ * https://github.com/rowetechinc
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY Rowe Technology Inc. ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ *  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
+ *  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ *  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ * or implied, of Rowe Technology Inc.
+ *
+ *
+ * HISTORY
+ * -----------------------------------------------------------------
+ * Date            Initials    Version    Comments
+ * -----------------------------------------------------------------
+ * 08/21/2015      RC          1.0        Initial coding
+ *
+ *
+ */
+
 package main
 
 import (
@@ -94,15 +134,18 @@ func (echo *echoHub) run() {
 		case m := <-echo.wsBroadcast:
 			//log.Print("Got a websocket broadcast" + string(m))
 
+			// Send the data from broadcast to all websocket connections
 			for c := range echo.websocketConn {
 				select {
-				case c.send <- m: // Send the data from broadcast to all websocket connections
+				case c.send <- m:
 				default:
 					log.Print("Close websocket send")
 					close(c.send)
 					delete(echo.websocketConn, c)
 				}
 			}
+
+			// Send the data to all recorders
 
 		}
 		//log.Print("Echo Hub loop")
@@ -127,6 +170,8 @@ func checkCmd(cmd []byte) {
 		spWrite(s)
 	} else if strings.HasPrefix(sl, "list") {
 		serialPortList()
+	} else if strings.HasPrefix(sl, "record") {
+		serialPortRecord(s)
 	} else {
 
 	}
@@ -199,4 +244,35 @@ func closePort(cmd string) {
 
 	// Close the given serial port
 	closeSerialPort(portname)
+}
+
+// serialPortRecord will start or stop recording on the serial port.
+// Cmd: RECORD COM6 START
+// Give the serial port and baud rate.
+func serialPortRecord(cmd string) {
+	log.Println(cmd)
+	// Trim the command
+	cmd = strings.TrimPrefix(cmd, " ")
+
+	// Split the command in to the 2 parameters
+	cmds := strings.SplitN(cmd, " ", 3)
+	if len(cmds) != 3 {
+		errstr := "Could not parse close command: " + cmd
+		log.Println(errstr)
+		return
+	}
+
+	// Get the port name
+	portname := strings.TrimSpace(cmds[1])
+
+	log.Println(portname)
+
+	if strings.Compare(strings.ToUpper(strings.TrimSpace(cmds[2])), "START") == 0 {
+		log.Printf("Start recording command recevied: %s", cmds[2])
+		// Close the given serial port
+		startRecording(portname)
+	} else {
+		log.Printf("Stop recording command received: %s", cmds[2])
+		stopRecording(portname)
+	}
 }

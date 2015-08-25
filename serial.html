@@ -34,7 +34,7 @@
 
 			<div class="row">
 				<div class="col-sm-10">
-					<textarea data-ng-bind="messageStr" readonly rows="35" cols="100" ></textarea>
+					<textarea data-ng-bind="messageStr" readonly rows="35" cols="100" id="serialPort_txtArea" ></textarea>
 				</div>
 			</div>
 
@@ -73,8 +73,11 @@
 											Is Open: <span data-ng-bind="port.IsOpen"></span><br>
 											<button class="btn btn-xs btn-default" ng-click="connect(port)">Connect</button>
 											<button class="btn btn-xs btn-default" ng-click="disconnect(port)">Disconnect</button><br>
-											<input type="text" cols="75" placeholder="type here" ng-model="portMsg" ng-enter="sendPortMsg()">
-											<button class="btn" ng-click="sendPortMsg(port, portMsg)">Send</button>
+											<button class="btn btn-xs btn-default" ng-click="recordStart(port)">Record</button>
+											<button class="btn btn-xs btn-default" ng-click="recordStop(port)">STOP</button>
+											<span data-ng-bind="port.fileSize"></span><br>
+											<input type="text" cols="75" placeholder="type here" ng-model="port.PortMsg" ng-enter="sendPortMsg()">
+											<button class="btn" ng-click="sendPortMsg(port, port.PortMsg)">Send</button>
 											<button class="btn" ng-click="sendPortStart(port)">START</button>
 											<button class="btn" ng-click="sendPortStop(port)">STOP</button>
 											<button class="btn" ng-click="sendPortBreak(port)">BREAK</button>
@@ -184,6 +187,18 @@ app.controller('SerialCtrl', function($scope) {
 			$scope.commands = jsonData.Commands;
 		}
 
+		// Get the file size that is recording
+		if( jsonData.hasOwnProperty('D') && jsonData.hasOwnProperty('FileSize') && $scope.portList != null)
+		{
+			for(x = 0; x < $scope.portList.length; x++)
+			{
+				if($scope.portList[x].Name == jsonData.P)
+				{
+					$scope.portList[x].fileSize = humanFileSize(jsonData.FileSize, false);
+				}
+			}
+		}
+
 		// If JSON data contains a D element,
 		// display just the data.  If the not display all
 		if(jsonData.D == undefined)
@@ -204,13 +219,15 @@ app.controller('SerialCtrl', function($scope) {
     var maxLength = 3000;
     if($scope.messageStr.length > maxLength)
     {
-      $scope.messageStr = $scope.messageStr.substring($scope.messageStr.length-maxLength, maxLength);
-    }
+      $scope.messageStr = $scope.messageStr.substring($scope.messageStr.length-maxLength);
+		}
+
+		// Always scroll to the bottom
+		var txtArea = document.getElementById('serialPort_txtArea');
+		txtArea.scrollTop = txtArea.scrollHeight;
   }
 
-	///
-	/// Append Status log.
-	///
+	// Append Status log.
 	function appendStatusLog(msg) {
 		var max = 10;
 		// Add element to front
@@ -240,10 +257,25 @@ app.controller('SerialCtrl', function($scope) {
 			$scope.portList = $scope.portList.replace("list", "");
 
 			// Convert to a JSON object
-			$scope.json = JSON.parse($scope.portList);
 			$scope.portList = JSON.parse($scope.portList);
 		}
 	}
+
+	function humanFileSize(bytes, si) {
+    var thresh = si ? 1000 : 1024;
+    if(Math.abs(bytes) < thresh) {
+        return bytes + ' B';
+    }
+    var units = si
+        ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+        : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+    var u = -1;
+    do {
+        bytes /= thresh;
+        ++u;
+    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
+    return bytes.toFixed(1)+' '+units[u];
+}
 
 	///
 	/// Set the Websocket status
@@ -391,10 +423,21 @@ WebsocketConnect();
 		// Reset the websocket connection
 		WebsocketConnect();
 	}
+	$scope.recordStart = function(port) {
+		var cmd = "RECORD " + port.Name + " START\r\n";
+		$scope.cmd = cmd;
+		conn.send(cmd);
+	}
+	$scope.recordStop = function(port) {
+		var cmd = "RECORD " + port.Name + " STOP\r\n";
+		$scope.cmd = cmd;
+		conn.send(cmd);
+	}
 	$scope.sendPortMsg = function(port, portMsg) {
 		var cmd = "SEND " + port.Name + " " + portMsg +  "\r\n";
 		$scope.cmd = cmd;
 		conn.send(cmd);
+		port.PortMsg = "";
 	}
 	$scope.sendPortStart = function(port) {
 		var cmd = "SEND " + port.Name + " START\r\n";

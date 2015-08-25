@@ -6,7 +6,7 @@ set GOPATH=PATH\To\GO
 go build
 
 ## Run Application
-./go-serial-websocket --port COM5 --baud 115200
+echo --port COM5 --baud 115200
 
 This will open a serial port connection to COM5 with a baudrate of 115200.  
 Open up the web browser and go to the file path:

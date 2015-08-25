@@ -1,3 +1,43 @@
+/*
+ * Copyright 2015, Rowe Technology Inc.
+ * All rights reserved.
+ * http://www.rowetechinc.com
+ * https://github.com/rowetechinc
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice, this list of
+ *      conditions and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice, this list
+ *      of conditions and the following disclaimer in the documentation and/or other materials
+ *      provided with the distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY Rowe Technology Inc. ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ *  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
+ *  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ *  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ * or implied, of Rowe Technology Inc.
+ *
+ *
+ * HISTORY
+ * -----------------------------------------------------------------
+ * Date            Initials    Version    Comments
+ * -----------------------------------------------------------------
+ * 08/21/2015      RC          1.0        Initial coding
+ *
+ *
+ */
+
 package main
 
 import (
@@ -16,11 +56,13 @@ import (
 // are the same object but use
 // different interfaces.
 type serialPortIO struct {
-	portConf   *SerialConfig      // The serial port configuration
-	portIO     io.ReadWriteCloser // Read, Write and Close interface to read and write to the serial port
-	serialPort *serial.SerialPort // Serial port connection to manage the
-	done       chan bool          // signals the end of this request
-	isClosing  bool               // Keep track of whether we're being actively closed just so we don't show scary error messages
+	portConf    *SerialConfig       // The serial port configuration
+	portIO      io.ReadWriteCloser  // Read, Write and Close interface to read and write to the serial port
+	serialPort  *serial.SerialPort  // Serial port connection to manage the
+	done        chan bool           // signals the end of this request
+	isClosing   bool                // Keep track of whether we're being actively closed just so we don't show scary error messages
+	isRecording bool                // Flag if serial port recording
+	recorder    *recorderSerialPort // Serial Port Recorder
 }
 
 // SerialConfig is the Serial Port configuration.
@@ -67,8 +109,9 @@ type serialPortHub struct {
 // Wrap the message received from
 // the serial port into a JSON struct.
 type SpPortMessage struct {
-	P string // the port, i.e. com22
-	D string // the data, i.e. G0 X0 Y0
+	P        string // the port, i.e. com22
+	D        string // the data, i.e. G0 X0 Y0
+	FileSize int    // Current file size
 }
 
 // writeRequest will send a Write request.
@@ -115,6 +158,11 @@ func (sh *serialPortHub) run() {
 			// so any loops can stops
 			p.isClosing = true
 
+			if p.isRecording {
+				log.Print("Stop spio recording")
+				stopSerialPortRecording(p)
+			}
+
 			// Close the serial port
 			p.serialPort.Close()
 
@@ -158,10 +206,17 @@ func openSerialPort(portname string, baud int) {
 
 	// Create the serial port IO struct
 	spio := &serialPortIO{
-		portConf:   config, // Port configuration
-		portIO:     sp,     // Serial port IO.ReadWriteCloser interface
-		serialPort: sp,     // Serial port hardware commands
-		isClosing:  false,  // Set flag that the port is not closed
+		portConf:    config, // Port configuration
+		portIO:      sp,     // Serial port IO.ReadWriteCloser interface
+		serialPort:  sp,     // Serial port hardware commands
+		isClosing:   false,  // Set flag that the port is not closed
+		isRecording: false,
+		recorder: &recorderSerialPort{
+			file:      nil,   // File to write to
+			writer:    nil,   // bufio to write data to file
+			isClosing: false, // Set flag
+			fileSize:  0,     // Initialize the file size
+		},
 	}
 
 	// Register the serial port
@@ -232,7 +287,7 @@ func (spio *serialPortIO) reader() {
 			data := string(ch[:n])
 
 			// Create a JSON message of the data
-			m := SpPortMessage{spio.portConf.Name, data}
+			m := SpPortMessage{spio.portConf.Name, data, spio.recorder.fileSize}
 			b, err := json.Marshal(m)
 			if err != nil {
 				log.Println(err)
@@ -243,6 +298,11 @@ func (spio *serialPortIO) reader() {
 
 			// Broadcast the JSON data
 			echo.wsBroadcast <- b
+
+			// Send the data to the recorder
+			if spio.isRecording {
+				spio.recorder.write <- ch[:n]
+			}
 		}
 	}
 }
