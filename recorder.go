@@ -84,7 +84,7 @@ func stopRecording(portName string) {
 func startSerialPortRecording(spio *serialPortIO) {
 	// Create a new file name
 	t := time.Now()
-	filePath := "Raw_" + t.Format("20060102150405") + ".ens"
+	filePath := *record + "Raw_" + t.Format("20060102150405") + ".ens"
 
 	log.Printf("Creating file: %s", filePath)
 

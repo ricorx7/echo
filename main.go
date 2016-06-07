@@ -18,6 +18,7 @@ var (
 	addr         = flag.String("addr", ":8989", "http service address")
 	port         = flag.String("port", "", "Serial COM Port")
 	baud         = flag.String("baud", "115200", "Baud Rate")
+	record       = flag.String("record", "", "Folder Path to record")
 )
 
 // serialHander passes the template
@@ -40,6 +41,7 @@ func main() {
 	log.Println("Port:" + *port)
 	log.Println("Baud:" + *baud)
 	log.Println("Addr: " + *addr)
+	log.Println("Record Path: " + *record)
 
 	// Convert the baud rate to int
 	baudInt, err := strconv.Atoi(*baud)
