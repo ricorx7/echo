@@ -247,8 +247,8 @@ func getAllPortsViaManufacturer() ([]OsSerialPort, os.SyscallError) {
 				DeviceClass:  deviceClass,
 				Manufacturer: manuf,
 				Product:      product,
-				IdVendor:     idVendor,
-				IdProduct:    idProduct,
+				IDVendor:     idVendor,
+				IDProduct:    idProduct,
 			}
 			if len(product) > 0 {
 				listitem.FriendlyName += " " + product
