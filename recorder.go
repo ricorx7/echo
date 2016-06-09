@@ -188,7 +188,7 @@ func createFile() (*os.File, error) {
 	if os.IsNotExist(err) {
 		var file, err1 = os.Create(filePath)
 		checkError(err)
-		defer file.Close()
+		//defer file.Close()
 
 		return file, err1
 	}
