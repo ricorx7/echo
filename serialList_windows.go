@@ -180,27 +180,27 @@ func getListViaWmiPnpEntity() ([]OsSerialPort, os.SyscallError) {
 		// get the deviceid so we can figure out related ports
 		// it will look similar to
 		// USB\VID_1D50&PID_606D&MI_00\6&2F09EA14&0&0000
-		deviceIdStr, _ := oleutil.GetProperty(item, "DeviceID")
-		devIdItems := strings.Split(deviceIdStr.ToString(), "&")
-		log.Printf("DeviceId elements:%v", devIdItems)
-		if len(devIdItems) > 3 {
-			list[i].SerialNumber = devIdItems[3]
+		deviceIDStr, _ := oleutil.GetProperty(item, "DeviceID")
+		devIDItems := strings.Split(deviceIDStr.ToString(), "&")
+		log.Printf("DeviceId elements:%v", devIDItems)
+		if len(devIDItems) > 3 {
+			list[i].SerialNumber = devIDItems[3]
 			//list[i].IdProduct = strings.Replace(devIdItems[1], "PID_", "", 1)
 			//list[i].IdVendor = strings.Replace(devIdItems[0], "USB\\VID_", "", 1)
 		} else {
-			list[i].SerialNumber = deviceIdStr.ToString()
+			list[i].SerialNumber = deviceIDStr.ToString()
 		}
 
-		pidMatch := regexp.MustCompile("PID_(....)").FindAllStringSubmatch(deviceIdStr.ToString(), -1)
+		pidMatch := regexp.MustCompile("PID_(....)").FindAllStringSubmatch(deviceIDStr.ToString(), -1)
 		if len(pidMatch) > 0 {
 			if len(pidMatch[0]) > 1 {
-				list[i].IdProduct = pidMatch[0][1]
+				list[i].IDProduct = pidMatch[0][1]
 			}
 		}
-		vidMatch := regexp.MustCompile("VID_(....)").FindAllStringSubmatch(deviceIdStr.ToString(), -1)
+		vidMatch := regexp.MustCompile("VID_(....)").FindAllStringSubmatch(deviceIDStr.ToString(), -1)
 		if len(vidMatch) > 0 {
 			if len(vidMatch[0]) > 1 {
-				list[i].IdVendor = vidMatch[0][1]
+				list[i].IDVendor = vidMatch[0][1]
 			}
 		}
 
@@ -216,7 +216,7 @@ func getListViaWmiPnpEntity() ([]OsSerialPort, os.SyscallError) {
 	for index, element := range list {
 
 		log.Printf("index:%v, name:%v, friendly:%v ", index, element.Name, element.FriendlyName)
-		log.Printf("pid:%v, vid:%v", element.IdProduct, element.IdVendor)
+		log.Printf("pid:%v, vid:%v", element.IDProduct, element.IDVendor)
 
 		for index2, element2 := range list {
 			if index == index2 {
@@ -238,7 +238,7 @@ func getListViaOpen() ([]OsSerialPort, os.SyscallError) {
 	log.Println("Doing getListViaOpen(). Will try to open COM1 to COM99.")
 	var err os.SyscallError
 	list := make([]OsSerialPort, 100)
-	var igood int = 0
+	var igood int
 	for i := 0; i < 100; i++ {
 		prtname := "COM" + strconv.Itoa(i)
 		//conf := &serial.Config{Name: prtname, Baud: 1200}

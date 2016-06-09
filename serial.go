@@ -93,8 +93,8 @@ type SpPortItem struct {
 	BufferAlgorithm           string
 	AvailableBufferAlgorithms []string
 	Ver                       float32
-	UsbVid                    string
-	UsbPid                    string
+	UsbVID                    string
+	UsbPID                    string
 }
 
 // serialPortHub is the Serial port HUB.
@@ -463,8 +463,8 @@ func serialPortList() {
 			BufferAlgorithm: "",
 			//AvailableBufferAlgorithms: availableBufferAlgorithms,
 			Ver:    versionFloat,
-			UsbPid: item.IdProduct,
-			UsbVid: item.IdVendor,
+			UsbPID: item.IDProduct,
+			UsbVID: item.IDVendor,
 		}
 
 		// if we have meta data for this port, use it
@@ -514,8 +514,8 @@ func setMetaData(pi *SpPortItem, metadata []OsSerialPort) {
 			pi.DeviceClass = mi.DeviceClass
 			pi.SerialNumber = mi.SerialNumber
 			pi.RelatedNames = mi.RelatedNames
-			pi.UsbPid = mi.IdProduct
-			pi.UsbVid = mi.IdVendor
+			pi.UsbPID = mi.IDProduct
+			pi.UsbVID = mi.IDVendor
 			break
 		}
 	}

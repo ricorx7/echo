@@ -61,3 +61,9 @@ func main() {
 		log.Fatal("Error ListenAndServe:", err)
 	}
 }
+
+func checkError(err error) {
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}

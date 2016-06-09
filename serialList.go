@@ -10,9 +10,7 @@ import (
 	"github.com/ricorx7/go-serial"
 )
 
-///
-/// Serial port settings
-///
+// OsSerialPort is the Serial port settings.
 type OsSerialPort struct {
 	Name         string
 	FriendlyName string
@@ -21,13 +19,11 @@ type OsSerialPort struct {
 	DeviceClass  string
 	Manufacturer string
 	Product      string
-	IdProduct    string
-	IdVendor     string
+	IDProduct    string
+	IDVendor     string
 }
 
-///
-/// Get a list of all the available serial ports
-///
+// GetList will get a list of all the available serial ports
 func GetList() ([]OsSerialPort, error) {
 
 	//log.Println("Doing GetList()")
@@ -65,9 +61,7 @@ func GetList() ([]OsSerialPort, error) {
 	return arrPorts, err
 }
 
-///
-/// Create a meta list of all the serial ports.
-///
+// GetMetaList will  create a meta list of all the serial ports.
 func GetMetaList() ([]OsSerialPort, error) {
 	metaportlist, err := getMetaList()
 	if err.Err != nil {
@@ -76,17 +70,13 @@ func GetMetaList() ([]OsSerialPort, error) {
 	return metaportlist, err.Err
 }
 
-///
-/// Friendly names for the ports.
-///
+// GetFriendlyName - Friendly names for the ports.
 func GetFriendlyName(portname string) string {
 	log.Println("GetFriendlyName from base class")
 	return ""
 }
 
-///
-/// Keys
-///
+// Dict for all the Keys.
 type Dict struct {
 	Keys    []string `xml:"key"`
 	Arrays  []Dict   `xml:"array"`
@@ -94,9 +84,7 @@ type Dict struct {
 	Dicts   []Dict   `xml:"dict"`
 }
 
-///
-/// Result struct.
-///
+// Result struct.
 type Result struct {
 	XMLName xml.Name `xml:"plist"`
 	//Strings []string `xml:"dict>string"`

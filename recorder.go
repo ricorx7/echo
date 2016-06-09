@@ -82,14 +82,15 @@ func stopRecording(portName string) {
 // the recorder to the serialPortIO.  It will then set
 // the flag to start recording.
 func startSerialPortRecording(spio *serialPortIO) {
-	// Create a new file name
-	t := time.Now()
-	filePath := *record + "Raw_" + t.Format("20060102150405") + ".ens"
-
-	log.Printf("Creating file: %s", filePath)
-
-	// Create the file
-	file, err := os.Create(filePath)
+	// // Create a new file name
+	// t := time.Now()
+	// filePath := *record + "Raw_" + t.Format("20060102150405") + ".ens"
+	//
+	// log.Printf("Creating file: %s", filePath)
+	//
+	// // Create the file
+	// file, err := os.Create(filePath)
+	file, err := createFile()
 	if err != nil {
 		log.Print("Error creating file. " + err.Error())
 		return
@@ -141,14 +142,15 @@ func stopSerialPortRecording(spio *serialPortIO) {
 // when the file max size has been exceeded and a new
 // file needs to be created.
 func loadNewFile(recorder *recorderSerialPort) {
-	// Create a new file name
-	t := time.Now()
-	filePath := *record + "Raw_" + t.Format("20060102150405") + ".ens"
-
-	log.Printf("Creating file: %s", filePath)
-
-	// Create the file
-	file, err := os.Create(filePath)
+	// // Create a new file name
+	// t := time.Now()
+	// filePath := *record + "Raw_" + t.Format("20060102150405") + ".ens"
+	//
+	// log.Printf("Creating file: %s", filePath)
+	//
+	// // Create the file
+	// file, err := os.Create(filePath)
+	file, err := createFile()
 	if err != nil {
 		log.Print("Error creating file. " + err.Error())
 		return
@@ -159,5 +161,37 @@ func loadNewFile(recorder *recorderSerialPort) {
 
 	// Create bufio
 	recorder.writer = bufio.NewWriter(file)
+}
 
+// Create the file.  This will create the folder for the current date.
+// It will then create the file in the folder.
+func createFile() (*os.File, error) {
+
+	// Create a new file name
+	t := time.Now()
+	folderPath := *record + t.Format("20060102") + string(os.PathSeparator)
+	filePath := folderPath + "Raw_" + t.Format("20060102150405") + ".ens"
+
+	log.Printf("Creating folder: %s\n", folderPath)
+	log.Printf("Creating file: %s\n", filePath)
+
+	// Check if the folder has been created already
+	var _, errFolder = os.Stat(folderPath)
+	if os.IsNotExist(errFolder) {
+		os.Mkdir(folderPath, 0711)
+	}
+
+	// detect if file exists
+	var _, err = os.Stat(filePath)
+
+	// create file if not exists
+	if os.IsNotExist(err) {
+		var file, err1 = os.Create(filePath)
+		checkError(err)
+		defer file.Close()
+
+		return file, err1
+	}
+
+	return nil, err
 }
