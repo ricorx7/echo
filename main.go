@@ -54,8 +54,9 @@ func main() {
 	go echo.init(port, baudInt)
 
 	// HTTP server
-	http.HandleFunc("/serial", serialHandler) // Display the websocket data
-	http.HandleFunc("/ws", wsHandler)         // wsHandler in websocketConn.go.  Creates websocket
+	http.HandleFunc("/serial", serialHandler)                                               // Display the websocket data
+	http.HandleFunc("/ws", wsHandler)                                                       // wsHandler in websocketConn.go.  Creates websocket
+	http.Handle("/react/", http.StripPrefix("/react/", http.FileServer(http.Dir("react")))) // React Frontend folder
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		fmt.Printf("Error trying to bind to port: %v, so exiting...", err)
 		log.Fatal("Error ListenAndServe:", err)
