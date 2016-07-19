@@ -3,13 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry:  {
-    hello: "./hello.jsx",
-    listFixed: "./watertestFixedTable.jsx",
-    listFixedTest: "./watertestFixedTableTest.jsx",
-    listComp: ["./watertestListComp.jsx", "./header.jsx"],
-    listCompTest: ["./watertestListCompTest.jsx", "./header.jsx"],
-    watertest: ["./watertestList.jsx", "./header.jsx"],
-    tanktest: ["./tanktestList.jsx", "./header.jsx"]
+    websocket: ["./echo_websocket.jsx", "./header.jsx"]
  },
   output: {
     path: __dirname,

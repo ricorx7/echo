@@ -34,9 +34,9 @@
     "react-paginate": "",
     "bootstrap": "",
     "fixed-data-table": "",
-    "react-data-components" : "",
-    "jquery":"",
-    "jquery-ui":""
+    "react-data-components": "",
+    "jquery": "",
+    "jquery-ui": ""
   },
   "dependencies": {
     "webpack": "^1.13.1"
