@@ -23,8 +23,8 @@
         <div>
 
          <textarea value={this.state.data} readOnly rows="35" cols="150" />
-
-          <Websocket url='ws://localhost:8787/ws' 
+         
+          <Websocket url='ws://localhost:8989/ws' 
               onMessage={this.handleData.bind(this)}
               reconnect='true'/>
         </div>

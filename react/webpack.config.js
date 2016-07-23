@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry:  {
-    websocket: ["./echo_websocket.jsx", "./header.jsx"]
+    websocket: ["./echo_websocket.jsx", "./serialToolbar.jsx", "./header.jsx"]
  },
   output: {
     path: __dirname,

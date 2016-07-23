@@ -1,6 +1,6 @@
     import React from 'react';
 
-    
+
 
     class Websocket extends React.Component {
     
@@ -8,7 +8,7 @@
         super(props);
         this.state = {
           baud: "",
-          attempts: 1
+          port: ""
         };
     }
 
