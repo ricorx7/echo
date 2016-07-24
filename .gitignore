@@ -8,10 +8,10 @@
 _obj
 _test
 
-# Project
+# Projects
 .vscode
-react/node_modules
-react/bundle.*.js
+client/node_modules
+client/bundle.*.js
 echo
 echo.exe
 *.eslintrc

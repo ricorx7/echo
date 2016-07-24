@@ -398,7 +398,7 @@ func findPortByName(portname string) (*serialPortIO, bool) {
 // serialPortList will get the Serial Port list.
 // It will then broadcast the serial port list to the
 // websocket.
-func serialPortList() {
+func serialPortList() SpPortList {
 
 	// call our os specific implementation of getting the serial list
 	list, _ := GetList()
@@ -503,6 +503,8 @@ func serialPortList() {
 		//log.Print(ls)
 		echo.wsBroadcast <- ls
 	}
+
+	return spl
 }
 
 ///

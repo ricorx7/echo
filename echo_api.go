@@ -109,3 +109,36 @@ func echoDisconnectSerialHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+
+// Get the serial Port list.
+func echoListSerialHandler(w http.ResponseWriter, r *http.Request) {
+	// Get the value of the "id" parameters.
+	//id := bone.GetValue(r, "id")
+
+	switch r.Method {
+	case "GET":
+		{
+			// Get the serial port list
+			spl := serialPortList()
+
+			fmt.Printf("Get Serial port list\n")
+
+			// Set data type and OK status
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(http.StatusOK)
+
+			if err := json.NewEncoder(w).Encode(spl); err != nil {
+				panic(err)
+			}
+		}
+	case "POST":
+		{
+
+		}
+	default:
+		{
+
+		}
+
+	}
+}
