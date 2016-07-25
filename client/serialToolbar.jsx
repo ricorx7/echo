@@ -56,7 +56,12 @@ export default class SerialToolbar extends React.Component {
   handleBaudChange(event, index, myvalue) {
       this.setState({baudIndex: myvalue});
       console.log("index: %i  value: %i\n", index, myvalue)
+
+
       // Make a new serial connection
+      $.post( "ajax/test.html", function( data ) {
+          $( ".result" ).html( data );
+        });
   }
 
 
@@ -69,10 +74,10 @@ export default class SerialToolbar extends React.Component {
         <ToolbarGroup firstChild={true}>
           <DropDownMenu value={this.state.portIndex} onChange={this.handlePortChange.bind(this, this.state.portIndex)}>
             {this.state.serialList.map(function(port, i) {
-                      return (
-                        <MenuItem value={i} primaryText={port.Friendly} />
-                      );
-                    })}
+                return (
+                  <MenuItem value={i} primaryText={port.Friendly} />
+                );
+              })}
             <MenuItem value={this.state.serialList.length} primaryText="Disconnect" />
                     
           </DropDownMenu>
@@ -80,10 +85,10 @@ export default class SerialToolbar extends React.Component {
         <ToolbarGroup firstChild={true}>
           <DropDownMenu value={this.state.baudIndex} onChange={this.handleBaudChange.bind(this, this.state.baudIndex)}>
             {this.state.bauds.map(function(baud, i) {
-                      return (
-                        <MenuItem value={i} primaryText={baud} />
-                      );
-                    })}
+                return (
+                  <MenuItem value={i} primaryText={baud} />
+                );
+              })}
                     
           </DropDownMenu>
         </ToolbarGroup>
