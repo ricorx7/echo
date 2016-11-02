@@ -320,7 +320,7 @@ app.controller('SerialCtrl', function($scope) {
   // called when the connection to the server is made
   conn.onopen = function(e) {
     $scope.$apply(function(){
-      appendStatusLog("CONNECTED");
+      appendStatusLog("<CONNEC></CONNEC>TED");
 			setWebsocketStatus("onopen:");
     })
   };
