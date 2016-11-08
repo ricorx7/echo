@@ -183,7 +183,7 @@ func (sh *serialPortHub) run() {
 // It returns the serial port struct that contains the IO.ReadWriterCloser
 // interface of the serial port, and the serial port hardware and
 // port configuration.
-func openSerialPort(portname string, baud int) {
+func openSerialPort(portname string, baud int) *SerialConfig {
 
 	log.Printf("Inside openPort.  Opening serial port %s at %s baud", portname, strconv.Itoa(baud))
 
@@ -232,6 +232,9 @@ func openSerialPort(portname string, baud int) {
 
 	// Start reading from the serial port
 	spio.reader()
+
+	// Return the configuration used
+	return config
 }
 
 // closeSerialPort will close the serial port.
@@ -395,7 +398,7 @@ func findPortByName(portname string) (*serialPortIO, bool) {
 // serialPortList will get the Serial Port list.
 // It will then broadcast the serial port list to the
 // websocket.
-func serialPortList() {
+func serialPortList() SpPortList {
 
 	// call our os specific implementation of getting the serial list
 	list, _ := GetList()
@@ -500,6 +503,8 @@ func serialPortList() {
 		//log.Print(ls)
 		echo.wsBroadcast <- ls
 	}
+
+	return spl
 }
 
 ///

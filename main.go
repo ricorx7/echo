@@ -59,14 +59,31 @@ func main() {
 	http.HandleFunc("/serial", serialHandler)                                                  // Display the websocket data
 	http.HandleFunc("/ws", wsHandler)                                                          // wsHandler in websocketConn.go.  Creates websocket
 	http.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("client")))) // React Frontend folder
+
+	// API
+	http.HandleFunc("/serial/list", echoListSerialHandler)             // List the serial ports
+	http.HandleFunc("/serial/connect", echoConnectSerialHandler)       //Connect serial port
+	http.HandleFunc("/serial/disconnect", echoDisconnectSerialHandler) // Disconnect serial port
+
+	http.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("client")))) // Client Frontend folder
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		fmt.Printf("Error trying to bind to port: %v, so exiting...", err)
 		log.Fatal("Error ListenAndServe:", err)
 	}
 }
 
-func checkError(err error) {
+// CheckError will check the error message and display if
+// found one.
+func CheckError(err error) {
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println("Error: ", err)
+	}
+}
+
+// CheckErrorStr will check the error message and display if
+// found one.
+func CheckErrorStr(err string) {
+	if len(err) > 0 {
+		fmt.Println("Error: ", err)
 	}
 }
