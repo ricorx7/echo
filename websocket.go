@@ -79,6 +79,7 @@ func (wsConn *websocketConn) reader() {
 
 // write writes a message with the given message type and payload.
 func (wsConn *websocketConn) write(mt int, payload []byte) error {
+	log.Print("Send data to websocket.")
 	wsConn.ws.SetWriteDeadline(time.Now().Add(writeWait))
 	return wsConn.ws.WriteMessage(mt, payload)
 }

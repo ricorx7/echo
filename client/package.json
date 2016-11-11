@@ -39,6 +39,7 @@
     "jquery-ui": ""
   },
   "dependencies": {
+    "react-websocket": "^1.1.6",
     "webpack": "^1.13.1"
   }
 }

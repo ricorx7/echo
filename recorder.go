@@ -167,17 +167,24 @@ func loadNewFile(recorder *recorderSerialPort) {
 // It will then create the file in the folder.
 func createFile() (*os.File, error) {
 
+	// Create Record folder if it does not exists
+	rootPath := *record + "record" + string(os.PathSeparator)
+	var _, errFolder = os.Stat(rootPath)
+	if os.IsNotExist(errFolder) {
+		os.Mkdir(rootPath, 0711)
+	}
+
 	// Create a new file name
 	t := time.Now()
-	folderPath := *record + t.Format("20060102") + string(os.PathSeparator)
+	folderPath := rootPath + t.Format("20060102") + string(os.PathSeparator)
 	filePath := folderPath + "Raw_" + t.Format("20060102150405") + ".ens"
 
 	log.Printf("Creating folder: %s\n", folderPath)
 	log.Printf("Creating file: %s\n", filePath)
 
 	// Check if the folder has been created already
-	var _, errFolder = os.Stat(folderPath)
-	if os.IsNotExist(errFolder) {
+	var _, errFolder1 = os.Stat(folderPath)
+	if os.IsNotExist(errFolder1) {
 		os.Mkdir(folderPath, 0711)
 	}
 
