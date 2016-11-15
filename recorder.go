@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -201,4 +203,45 @@ func createFile() (*os.File, error) {
 	}
 
 	return nil, err
+}
+
+// RecordedFileInfo holdes the file info structure.
+type RecordedFileInfo struct {
+	RcrdFolder string
+	RcrdFile   string
+}
+
+// RecordedFileList is a list of files recorded
+// and there folder path.
+type RecordedFileList struct {
+	FileList []RecordedFileInfo
+}
+
+func getFileList() RecordedFileList {
+	rootPath := *record + "record" + string(os.PathSeparator)
+
+	// Read all the directory in the record folder
+	files, _ := ioutil.ReadDir(rootPath)
+
+	var recordedFiles RecordedFileList
+	var fileList []RecordedFileInfo
+
+	for _, f := range files {
+		if f.IsDir() { // Find subfolders
+			subFiles, _ := ioutil.ReadDir(rootPath + string(os.PathSeparator) + f.Name()) // Get the subfiles within subfolder
+			for _, sf := range subFiles {
+				subFile := new(RecordedFileInfo)         // Create struct
+				subFile.RcrdFolder = rootPath + f.Name() // Set folder
+				subFile.RcrdFile = sf.Name()             // Set file name
+				fileList = append(fileList, *subFile)    // Add struct to list
+			}
+		}
+	}
+
+	// Set the file list
+	recordedFiles.FileList = fileList
+
+	fmt.Println("Recorded Files: ", recordedFiles)
+
+	return recordedFiles
 }

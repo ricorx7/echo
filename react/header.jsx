@@ -13,9 +13,9 @@ import Menu from 'material-ui/Menu';
 import {blueGrey500} from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-//import injectTapEventPlugin from "react-tap-event-plugin";
+import injectTapEventPlugin from "react-tap-event-plugin";
 
-//injectTapEventPlugin();
+injectTapEventPlugin();
 
 // Theme for material-ui toggle
 const muiTheme = getMuiTheme({
@@ -76,6 +76,7 @@ handleSelect(eventKey) {
                 <NavDropdown eventKey={1} title="ADCP" id="basic-nav-dropdown">
                     <MenuItem eventKey={1.1} rightIcon={<InputIcon />} ><Link to="/serial">Serial Port</Link></MenuItem>
                     <MenuItem eventKey={1.2} primaryText="Recordings" href="/record" rightIcon={<ArchiveIcon />} ></MenuItem>
+                    <MenuItem eventKey={1.3} rightIcon={<InputIcon />} ><Link to="/recorded">Recorded Data</Link></MenuItem>
                 </NavDropdown>
             </Nav>
             <Nav pullRight>
@@ -83,17 +84,6 @@ handleSelect(eventKey) {
             </Nav>
         </Navbar.Collapse>
     </Navbar>
-
-    <MuiThemeProvider muiTheme={muiTheme}>
-        <Toolbar>
-            <ToolbarGroup firstChild={true}>
-                <Menu>
-                    <MenuItem1 primaryText="Serial Port" href="/react/#/serial" leftIcon={<InputIcon />} ></MenuItem1>
-                    <MenuItem1 primaryText="Recordings" href="/record" leftIcon={<ArchiveIcon />} ></MenuItem1>
-                </Menu>
-            </ToolbarGroup>
-        </Toolbar>
-    </MuiThemeProvider>
 </div>
 
     )}

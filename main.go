@@ -67,6 +67,7 @@ func main() {
 	http.HandleFunc("/serial/list", echoListSerialHandler)             // List the serial ports
 	http.HandleFunc("/serial/connect", echoConnectSerialHandler)       //Connect serial port
 	http.HandleFunc("/serial/disconnect", echoDisconnectSerialHandler) // Disconnect serial port
+	http.HandleFunc("/file/list", echoListFilesHandler)                // Get list of all the files recorded
 
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		fmt.Printf("Error trying to bind to port: %v, so exiting...", err)

@@ -68,6 +68,10 @@
 
 	var _SerialDisplay2 = _interopRequireDefault(_SerialDisplay);
 
+	var _RecordedData = __webpack_require__(1034);
+
+	var _RecordedData2 = _interopRequireDefault(_RecordedData);
+
 	var _Layout = __webpack_require__(940);
 
 	var _Layout2 = _interopRequireDefault(_Layout);
@@ -93,7 +97,8 @@
 	    _react2.default.createElement(
 	      _reactRouter.Route,
 	      { path: '/', component: _Layout2.default },
-	      _react2.default.createElement(_reactRouter.Route, { path: '/serial', component: _SerialDisplay2.default })
+	      _react2.default.createElement(_reactRouter.Route, { path: '/serial', component: _SerialDisplay2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/recorded', component: _RecordedData2.default })
 	    )
 	  )
 	), document.getElementById('app'));
@@ -45126,6 +45131,10 @@
 
 	var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
 
+	var _reactTapEventPlugin = __webpack_require__(1003);
+
+	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45134,9 +45143,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	//import injectTapEventPlugin from "react-tap-event-plugin";
-
-	//injectTapEventPlugin();
+	(0, _reactTapEventPlugin2.default)();
 
 	// Theme for material-ui toggle
 	var muiTheme = (0, _getMuiTheme2.default)({
@@ -45227,7 +45234,16 @@
 	                                        'Serial Port'
 	                                    )
 	                                ),
-	                                _react2.default.createElement(_reactBootstrap.MenuItem, { eventKey: 1.2, primaryText: 'Recordings', href: '/record', rightIcon: _react2.default.createElement(_archive2.default, null) })
+	                                _react2.default.createElement(_reactBootstrap.MenuItem, { eventKey: 1.2, primaryText: 'Recordings', href: '/record', rightIcon: _react2.default.createElement(_archive2.default, null) }),
+	                                _react2.default.createElement(
+	                                    _reactBootstrap.MenuItem,
+	                                    { eventKey: 1.3, rightIcon: _react2.default.createElement(_settingsInputHdmi2.default, null) },
+	                                    _react2.default.createElement(
+	                                        _reactRouter.Link,
+	                                        { to: '/recorded' },
+	                                        'Recorded Data'
+	                                    )
+	                                )
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -45237,24 +45253,6 @@
 	                                _reactBootstrap.NavItem,
 	                                { eventKey: 1, href: 'http://rowetechinc.co/wiki/index.php?title=Main_Page' },
 	                                'RoweTech Wiki'
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    _MuiThemeProvider2.default,
-	                    { muiTheme: muiTheme },
-	                    _react2.default.createElement(
-	                        _Toolbar.Toolbar,
-	                        null,
-	                        _react2.default.createElement(
-	                            _Toolbar.ToolbarGroup,
-	                            { firstChild: true },
-	                            _react2.default.createElement(
-	                                _Menu2.default,
-	                                null,
-	                                _react2.default.createElement(_MenuItem2.default, { primaryText: 'Serial Port', href: '/react/#/serial', leftIcon: _react2.default.createElement(_settingsInputHdmi2.default, null) }),
-	                                _react2.default.createElement(_MenuItem2.default, { primaryText: 'Recordings', href: '/record', leftIcon: _react2.default.createElement(_archive2.default, null) })
 	                            )
 	                        )
 	                    )
@@ -64031,7 +64029,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	(0, _reactTapEventPlugin2.default)();
+	//injectTapEventPlugin();
 
 	// Theme for material-ui toggle
 	var muiTheme = (0, _getMuiTheme2.default)({
@@ -95079,6 +95077,118 @@
 	exports.Menu = _Menu3.default;
 	exports.MenuItem = _MenuItem3.default;
 	exports.default = _Menu3.default;
+
+/***/ },
+/* 1034 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(343);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(375);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _colors = __webpack_require__(848);
+
+	var _getMuiTheme = __webpack_require__(849);
+
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+	var _MuiThemeProvider = __webpack_require__(896);
+
+	var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
+
+	var _RaisedButton = __webpack_require__(918);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Theme for material-ui toggle
+	var muiTheme = (0, _getMuiTheme2.default)({
+	    palette: {
+	        accent1Color: _colors.blueGrey500
+	    }
+	});
+
+	var dlButtonStyle = {
+	    margin: 12
+	};
+
+	// Display the record data and allow the user to download the data.
+
+	var RecordedData = function (_React$Component) {
+	    _inherits(RecordedData, _React$Component);
+
+	    function RecordedData(props) {
+	        _classCallCheck(this, RecordedData);
+
+	        var _this = _possibleConstructorReturn(this, (RecordedData.__proto__ || Object.getPrototypeOf(RecordedData)).call(this, props));
+
+	        _this.state = {
+	            fileList: []
+	        };
+	        return _this;
+	    }
+
+	    _createClass(RecordedData, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            // Get the file list
+	            $.getJSON('http://localhost:8989/file/list', function (data) {
+	                this.setState({ fileList: data.FileList });
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {}
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    _MuiThemeProvider2.default,
+	                    { muiTheme: muiTheme },
+	                    _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        this.state.fileList.map(function (file, i) {
+	                            return _react2.default.createElement(
+	                                'div',
+	                                null,
+	                                file.RcrdFile,
+	                                _react2.default.createElement(_RaisedButton2.default, { primary: true, label: 'Download', href: "../" + file.RcrdFolder + "/" + file.RcrdFile, style: dlButtonStyle })
+	                            );
+	                        })
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return RecordedData;
+	}(_react2.default.Component);
+
+	exports.default = RecordedData;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1002)))
 
 /***/ }
 /******/ ]);

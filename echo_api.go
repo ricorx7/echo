@@ -142,3 +142,37 @@ func echoListSerialHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+
+// Get the list of all the files to record.
+func echoListFilesHandler(w http.ResponseWriter, r *http.Request) {
+	// Get the value of the "id" parameters.
+	//id := bone.GetValue(r, "id")
+
+	switch r.Method {
+	case "GET":
+		{
+			// Get the serial port list
+			files := getFileList()
+
+			fmt.Println("Get file list: ", files)
+
+			// Set data type and OK status
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(http.StatusOK)
+
+			if err := json.NewEncoder(w).Encode(files); err != nil {
+				fmt.Println(err)
+				panic(err)
+			}
+		}
+	case "POST":
+		{
+
+		}
+	default:
+		{
+
+		}
+
+	}
+}

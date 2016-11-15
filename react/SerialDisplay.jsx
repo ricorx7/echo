@@ -28,7 +28,7 @@ import AppBar from 'material-ui/AppBar';
 import Divider from 'material-ui/Divider';
 import Websocket from './websocket.jsx';
 
-injectTapEventPlugin();
+//injectTapEventPlugin();
 
 // Theme for material-ui toggle
 const muiTheme = getMuiTheme({
