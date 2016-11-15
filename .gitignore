@@ -32,6 +32,10 @@ _cgo_export.*
 
 _testmain.go
 
+# Record Folder
+record
+record/*
+
 *.exe
 *.test
 *.prof
