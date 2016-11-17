@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { createEpicMiddleware } from 'redux-observable';
+import { createEpicMiddleware, reduxObservable } from 'redux-observable';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 import rootEpic from './epics';

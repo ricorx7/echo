@@ -27,6 +27,9 @@ import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import Divider from 'material-ui/Divider';
 import Websocket from './websocket.jsx';
+//import WebsocketObservable from './redux/epics/websocketEpic.js';
+//import WebsocketObservable from './redux/containers/websocketObservable.jsx';
+import Counter from './saga/components/Counter';
 
 //injectTapEventPlugin();
 
@@ -62,6 +65,7 @@ export default class SerialDisplay extends React.Component {
             version: "",
             commands: [],
             ws: new Websocket({url: 'ws://localhost:8989/ws', onMessage: (evt) => {this.handleWsData(evt);}, onopen: this.openWebsocket(), onclose: this.closeWebsocket()}),
+            //wsOb: new WebsocketObservable(),
         };
     }
 
@@ -306,14 +310,7 @@ export default class SerialDisplay extends React.Component {
         console.log("Close Websocket");
     }
 
-    setupWebsocket() {
-        let websocket = this.state.ws;
-        websocket.onopen = this.openWebsocket;      // Open Socket function
-        websocket.close = this.closeWebsocket;      // Close Socket function
-        websocket.onmessage = (evt) => {            // When message is received from socket
-            this.handleWsData(evt.data);
-        }
-    }
+
 
 
 
@@ -393,6 +390,7 @@ export default class SerialDisplay extends React.Component {
                         
                     </div>
                 </MuiThemeProvider>
+                <Counter />
 
             </div>
         );

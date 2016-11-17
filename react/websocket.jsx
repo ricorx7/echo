@@ -11,6 +11,16 @@ class Websocket extends React.Component {
         };
     }
 
+    componentDidMount() {
+      this.setupWebsocket();
+    }
+
+    componentWillUnmount() {
+      let websocket = this.state.ws;
+      websocket.close();
+    }
+
+
     logging(logline) {
         if (this.props.debug === true) {
             console.log(logline);
@@ -52,16 +62,6 @@ class Websocket extends React.Component {
     send(cmd) {
         this.state.ws.send(cmd);
         console.log(cmd);
-    }
-
-
-    componentDidMount() {
-      this.setupWebsocket();
-    }
-
-    componentWillUnmount() {
-      let websocket = this.state.ws;
-      websocket.close();
     }
 
     render() {
